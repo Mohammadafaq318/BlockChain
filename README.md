@@ -13,8 +13,8 @@ mafaqq318@gmail.com
 Verify node is intalled using
 ### node -v
 ### npm -v
-npm init -y 
-npm install jest@23.6.0 --save-dev (used for testing)
+- npm init -y 
+- npm install jest@23.6.0 --save-dev (used for testing)
 
 ## Postman
 Install from snapstore

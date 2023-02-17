@@ -15,6 +15,7 @@ Verify node is intalled using
 ### npm -v
 - npm init -y 
 - npm install jest@23.6.0 --save-dev (used for testing)
+- npm i hex-to-binary@1.0.1 --save
 
 ## Postman
 Install from snapstore

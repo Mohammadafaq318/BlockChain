@@ -1,4 +1,5 @@
 const crypto=require('crypto');
+const hexToBinary=require('hex-to-binary');
 
 const cryptoHash = (...inputs)=>{
     

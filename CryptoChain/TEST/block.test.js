@@ -1,6 +1,8 @@
 const Block = require("../SRC/block");
 const { GENESIS_DATA , MINE_RATE } = require("../SRC/config");
 const cryptoHash = require("../SRC/crypto-hash");
+const hexToBinary=require('hex-to-binary');
+
 
 describe('Block',() => {
     const timestamp = 2000;
@@ -75,7 +77,7 @@ describe('Block',() => {
         });
 
         it('sets a ´hash´ that matches the difficulty criteria',()=>{
-            expect(minedBlock.hash.substring(0,minedBlock.difficulty)).toEqual('0'.repeat(minedBlock.difficulty));
+            expect(hexToBinary(minedBlock.hash).substring(0,minedBlock.difficulty)).toEqual('0'.repeat(minedBlock.difficulty));
         });
 
         it('adjusts the difficulty',()=>{
@@ -100,6 +102,11 @@ describe('Block',() => {
                 timestamp:block.timestamp+MINE_RATE+100
             })).toEqual(difficulty-1);
         })
+
+        it('has a lower limit of 1',()=>{
+            block.difficulty=-1;
+            expect(Block.adjustDifficulty({originalBlock: block})).toEqual(1);
+        });
     });
 });
 

@@ -22,6 +22,7 @@ Verify node is intalled using
 - npm i redis@2.8.0 --save (Pub/Sub blockchain requests)
 - npm i cross-env@5.2.0 --save-dev (allows us to set environmental variables programmiticaly regardless of OS and Terminal type)
 - npm i request@2.88.0 --save (abilty to send http requests)
+- npm i elliptic@6.4.1 --save (for public private address of wallet)
 
 ## Postman
 Install from snapstore

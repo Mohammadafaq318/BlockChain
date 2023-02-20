@@ -1,6 +1,6 @@
-const Block = require("../SRC/block");
-const { GENESIS_DATA , MINE_RATE } = require("../SRC/config");
-const cryptoHash = require("../SRC/crypto-hash");
+const Block = require("../SRC/blockchain/block");
+const { GENESIS_DATA , MINE_RATE } = require("../config");
+const cryptoHash = require("../SRC/utilities/crypto-hash");
 const hexToBinary=require('hex-to-binary');
 
 

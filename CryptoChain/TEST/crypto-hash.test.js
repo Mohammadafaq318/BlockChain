@@ -1,4 +1,4 @@
-const cryptoHash = require('../SRC/crypto-hash');
+const cryptoHash = require('../SRC/utilities/crypto-hash');
 
 describe('cryptoHash()',()=>{
 

@@ -1,5 +1,5 @@
 const Block = require("./block");
-const cryptoHash = require("../utilities/crypto-hash");
+const {crypto_hash} = require('../utilities/elliptic');
 
 class Blockchain{
     constructor(){
@@ -50,7 +50,7 @@ class Blockchain{
                 return false;
             }
 
-            const actualHash=cryptoHash(timestamp,lastHash,data,nonce,difficulty);
+            const actualHash=crypto_hash(timestamp,lastHash,data,nonce,difficulty);
 
             if(hash!==actualHash){
                 return false;

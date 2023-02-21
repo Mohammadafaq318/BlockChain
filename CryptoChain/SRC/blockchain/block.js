@@ -1,5 +1,5 @@
 const { GENESIS_DATA, MINE_RATE } = require("../../config");
-const cryptoHash = require("../utilities/crypto-hash");
+const {crypto_hash} = require('../utilities/elliptic');
 const hexToBinary=require('hex-to-binary');
 
 
@@ -28,7 +28,7 @@ class Block {
             nonce++;
             timestamp=Date.now();
             difficulty=Block.adjustDifficulty({originalBlock:lastBlock,timestamp});
-            hash= cryptoHash(timestamp,lastHash,data,nonce,difficulty);
+            hash= crypto_hash(timestamp,lastHash,data,nonce,difficulty);
 
         }while(hexToBinary(hash).substring(0,difficulty)!=='0'.repeat(difficulty));
 

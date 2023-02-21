@@ -1,6 +1,6 @@
 const {STARTING_BALANCE}=require('../../config');
-const {ec} = require('../utilities/elliptic');
-const crypto_hash = require('../utilities/crypto-hash');
+const {ec,crypto_hash} = require('../utilities/elliptic');
+const Transaction = require('../wallet/transaction');
 
 class Wallet{   
 
@@ -14,6 +14,15 @@ class Wallet{
 
     sign(data){
         return this.keyPair.sign(crypto_hash(data));
+    };
+
+    createTransaction({recipient,amount}){
+
+        if(amount>this.balance){
+            throw new Error('Amount exceeds balance');
+        }
+
+        return new Transaction({senderWallet: this,recipient,amount});
     };
 
 };

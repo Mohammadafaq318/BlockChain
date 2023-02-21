@@ -1,6 +1,6 @@
 const Blockchain = require('../SRC/blockchain/blockchain');
 const Block = require("../SRC/blockchain/block");
-const cryptoHash=require('../SRC/utilities/crypto-hash');
+const {crypto_hash} = require('../SRC/utilities/elliptic');
 
 describe('Blockchain', () => {
     let blockchain, newChain, originalChain;
@@ -67,7 +67,7 @@ describe('Blockchain', () => {
                     const data=[];
                     const difficulty=lastBlock.difficulty-3;
 
-                    const hash=cryptoHash(timestamp,lastHash,difficulty, nonce,data);
+                    const hash=crypto_hash(timestamp,lastHash,difficulty, nonce,data);
                     const badBlock=new Block({timestamp,lastHash,difficulty,nonce,data});
 
                     blockchain.chain.push(badBlock);

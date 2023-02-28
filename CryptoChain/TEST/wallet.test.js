@@ -1,6 +1,8 @@
 const Wallet = require('../SRC/wallet/wallet');
 const {verifySignature} = require('../SRC/utilities/elliptic');
 const Transaction = require('../SRC/wallet/transaction');
+const Blockchain = require('../SRC/blockchain/blockchain');
+const { STARTING_BALANCE } = require('../config');
 
 
 describe('Wallet',()=>{
@@ -82,6 +84,42 @@ describe('Wallet',()=>{
     });
 
     describe('calculateBalance()',()=>{
-        
+        let blockchain;
+
+        beforeEach(()=>{
+            blockchain=new Blockchain();
+        });
+
+        describe('no outputs for the wallet',()=>{
+            it('returns the starting balance',()=>{
+                expect(Wallet.calculateBalance({
+                    chain: blockchain.chain,
+                    address: wallet.publicKey
+                })).toEqual(STARTING_BALANCE);
+            });
+        });
+
+        describe('there are outputs for the wallet on the chain',()=>{
+            let transactionOne, transactionTwo;
+
+            beforeEach(() => {
+                transactionOne = new Wallet().createTransaction({
+                recipient: wallet.publicKey,
+                amount: 50
+                });
+
+                transactionTwo = new Wallet().createTransaction({
+                recipient: wallet.publicKey,
+                amount: 60
+                });
+
+                blockchain.addBlock({ data: [transactionOne, transactionTwo] });
+            });
+            it('adds the sum of all outputs to the wallet balance',()=>{
+                expect(Wallet.calculateBalance({chain: blockchain.chain, address: wallet.publicKey})
+                ).toEqual(STARTING_BALANCE+transactionOne.outputMap[wallet.publicKey]+transactionTwo.outputMap[wallet.publicKey])
+            });
+
+        });
     });
 }); 

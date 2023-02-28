@@ -80,4 +80,8 @@ describe('Wallet',()=>{
 
         });
     });
+
+    describe('calculateBalance()',()=>{
+        
+    });
 }); 

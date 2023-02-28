@@ -1,3 +1,4 @@
+const { REWARD_INPUT, MINING_REWARD } = require('../config');
 const { verifySignature } = require('../SRC/utilities/elliptic');
 const Transaction = require('../SRC/wallet/transaction')
 const Wallet = require('../SRC/wallet/wallet')
@@ -171,6 +172,23 @@ describe('Transaction',()=>{
                 .toEqual(originalSenderOutput - nextAmount - addedAmount);
             });
           });
+        });
+      });
+
+      describe('rewardTransaction()',()=>{
+        let rewardTransaction,minerWallet;
+
+        beforeEach(()=>{
+          minerWallet=new Wallet();
+          rewardTransaction= Transaction.rewardTransaction({minerWallet});
+        });
+
+        it('creates a reward transaction with reward input',()=>{
+          expect(rewardTransaction.input).toEqual(REWARD_INPUT);
+        });
+
+        it('creates one transaction for the miner with the mining reward',()=>{
+          expect(rewardTransaction.outputMap[minerWallet.publicKey]).toEqual(MINING_REWARD);
         });
       });
 });

@@ -6,14 +6,14 @@ const PubSub=require('./SRC/App/pubsub');
 const TransactionPool=require('./SRC/wallet/transaction-pool');
 const Wallet = require('./SRC/wallet/wallet');
 const { response } = require('express');
-
+const TransactionMiner=require('./SRC/App/transaction-miner');
 
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
 const pubsub = new PubSub({blockchain,transactionPool,wallet});
-
+const transactionMiner = new TransactionMiner({blockchain,transactionPool,wallet,pubsub});
 
 const DEFAULT_PORT=3000;
 const ROOT_NODE_ADDRESS=`http://localhost:${DEFAULT_PORT}`;
@@ -70,6 +70,14 @@ app.post('/api/transact',(req,res)=>{
 //post request to get the data in the transaction pool map
 app.get('/api/transaction-pool-map',(req,res)=>{
     res.json(transactionPool.transactionMap);
+})
+
+
+app.get('/api/mine-transactions',(req,res)=>{
+    
+    transactionMiner.mineTransactions();
+
+    res.redirect('/api/blocks');
 })
 
 const syncwithRootState = () =>{

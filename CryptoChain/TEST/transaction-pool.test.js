@@ -1,6 +1,7 @@
 const TransactionPool = require('../SRC/wallet/transaction-pool');
 const Transaction = require('../SRC/wallet/transaction');
 const Wallet = require('../SRC/wallet/wallet');
+const Blockchain= require('../SRC/blockchain/blockchain');
 const { RedisClient } = require('redis');
 
 describe('TransactionPool',()=>{
@@ -32,6 +33,84 @@ describe('TransactionPool',()=>{
 
             expect(transactionPool.existingTransaction({inputAddress: senderWallet.publicKey})
             ).toBe(transaction);
+        });
+    });
+
+    describe('validTransactions()',()=>{
+        let validTransactions, errorMock;
+
+        beforeEach(()=>{
+            validTransactions=[];
+            errorMock=jest.fn();
+            global.console.error = errorMock;
+
+
+            for(let i=0;i<10;i++){
+                transaction= new Transaction({
+                    senderWallet,
+                    recipient: 'any-recipient',
+                    amount: 30
+                })
+
+                if(i%3)
+                {
+                    transaction.input.amount=9999999;
+                }
+                else if(i%3==1){
+                    transaction.input.signature=new Wallet().sign('foo');
+                }
+                else{
+                    validTransactions.push(transaction);
+                }
+                transactionPool.setTransaction(transaction);
+            }
+        });
+
+        it('returns a valid transaction',()=>{  
+            expect(transactionPool.validTransactions()).toEqual(validTransactions);
+
+        })
+
+        it('logs errors for the invalid transaction',()=>{  
+            transactionPool.validTransactions();
+            expect(errorMock).toHaveBeenCalled();
+
+        })
+
+    });
+
+    describe('clear()',()=>{
+
+        it('it clears the transactions',()=>{
+            transactionPool.clear();
+            expect(transactionPool.transactionMap).toEqual({});
+        })
+
+    });
+
+    describe('clearBlockchainTransactions()',()=>{
+        
+        it('clears the pool of any existing blockchain transactions',()=>{
+            const blockchain= new Blockchain();
+            const expectedTransactionMap={};
+
+            for(let i=0;i<6;i++){
+                const transaction= new Wallet().createTransaction({
+                    recipient: 'foo',amount:20
+                });
+
+                transactionPool.setTransaction(transaction);
+
+                if (i%2===0){
+                    blockchain.addBlock({data:[transaction]})
+                }else{
+                    expectedTransactionMap[transaction.id]=transaction;
+                }
+            }
+
+            transactionPool.clearBlockchainTransactions({chain:blockchain.chain});
+
+            expect(transactionPool.transactionMap).toEqual(expectedTransactionMap);
         });
     });
 });

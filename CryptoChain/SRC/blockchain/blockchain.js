@@ -1,5 +1,6 @@
 const Block = require("./block");
 const {crypto_hash} = require('../utilities/elliptic');
+const { on } = require("nodemon");
 
 class Blockchain{
     constructor(){
@@ -15,7 +16,7 @@ class Blockchain{
         this.chain.push(newBlock);
     }
 
-    replaceChain(chain){
+    replaceChain(chain, onSuccess){
         if(chain.length<=this.chain.length){
             console.error('incoming chain must be longer');
             return;
@@ -26,6 +27,9 @@ class Blockchain{
             return;
         }
 
+        if(onSuccess){
+            onSuccess();
+        }
         console.log('replacing chain with',chain);
         this.chain=chain;
     };

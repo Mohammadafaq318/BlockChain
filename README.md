@@ -1,5 +1,5 @@
 # BlockChain
-My first Blockchain project
+My Blockchain backend project
 
 # Author
 Mohammad Afaq
